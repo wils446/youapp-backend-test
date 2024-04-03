@@ -3,7 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
-      target: production
+      target: development
+    command: pnpm run start:dev api
     env_file:
       - ./apps/api/.env
     depends_on:
@@ -22,7 +23,8 @@ services:
     build:
       context: .
       dockerfile: ./apps/websocket/Dockerfile
-      target: production
+      target: development
+    command: pnpm run start:dev websocket
     env_file:
       - ./apps/websocket/.env
     depends_on:
