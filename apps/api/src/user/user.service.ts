@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto, GetUserDto, UpdateUserDto } from './dtos';
 import { ICredential, IUser } from './interfaces';
@@ -71,13 +72,13 @@ export class UserService {
   }
 
   async getUserRoom(userCredential: ICredential) {
-    console.log(userCredential);
+    if (!userCredential.user) throw new UnauthorizedException();
     const rooms = await this.roomRepository.find({
       users: { $in: [userCredential.user._id] },
     });
 
     return {
-      userId: userCredential.user,
+      userId: userCredential.user._id,
       rooms,
     };
   }
