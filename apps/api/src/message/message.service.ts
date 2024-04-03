@@ -36,11 +36,11 @@ export class MessageService {
     });
     if (!targetUser) throw new NotFoundException('target user not found');
 
-    // const session = await this.userRepository.startTransaction();
+    const session = await this.userRepository.startTransaction();
 
     const room = await this.getMessageRoom(
       [userCredential.user._id.toString(), sendMessageDto.targetUser],
-      // session,
+      session,
     );
 
     try {
@@ -50,9 +50,9 @@ export class MessageService {
           room: room._id,
           user: userCredential.user,
         },
-        // { session },
+        { session },
       );
-      // await session.commitTransaction();
+      await session.commitTransaction();
       await lastValueFrom(
         this.websocketClient.emit('send-message', {
           message: newMessage,
@@ -61,7 +61,7 @@ export class MessageService {
       return newMessage;
     } catch (err) {
       console.log(err);
-      // await session.abortTransaction();
+      await session.abortTransaction();
       throw new InternalServerErrorException((err as Error).message);
     }
   }
