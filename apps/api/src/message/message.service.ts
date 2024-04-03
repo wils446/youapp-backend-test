@@ -70,6 +70,9 @@ export class MessageService {
     userCredential: ICredential,
     viewMessageDto: ViewMessageDto,
   ) {
+    if (userCredential.user._id.toString() === viewMessageDto.targetUser)
+      throw new BadRequestException('target user cannot same with own id');
+
     const room = await this.getMessageRoom([
       userCredential.user._id.toString(),
       viewMessageDto.targetUser,
