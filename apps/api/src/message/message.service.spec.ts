@@ -106,9 +106,17 @@ describe('MessageService', () => {
       room,
     } as IMessage;
 
+    const mockSession = {
+      commitTransaction: jest.fn(),
+      abortTransaction: jest.fn(),
+    };
+
     jest
       .spyOn(mockUserRepository, 'findOne')
       .mockResolvedValue({ _id: sendMessageDto.targetUser });
+    jest
+      .spyOn(mockUserRepository, 'startTransaction')
+      .mockResolvedValue(mockSession);
     jest.spyOn(mockRoomRepository, 'findOne').mockResolvedValue(room);
     jest.spyOn(mockMessageRepository, 'create').mockResolvedValue(newMessage);
     jest.spyOn(rxjs, 'lastValueFrom').mockImplementation();
@@ -127,11 +135,14 @@ describe('MessageService', () => {
     });
 
     expect(mockMessageRepository.create).toBeCalled();
-    expect(mockMessageRepository.create).toBeCalledWith({
-      message: sendMessageDto.message,
-      room: room._id,
-      user: user,
-    });
+    expect(mockMessageRepository.create).toBeCalledWith(
+      {
+        message: sendMessageDto.message,
+        room: room._id,
+        user: user,
+      },
+      { session: mockSession },
+    );
 
     expect(rxjs.lastValueFrom).toBeCalled();
     expect(mockWebsocketClient.emit).toBeCalled();
