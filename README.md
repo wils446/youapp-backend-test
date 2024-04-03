@@ -2,7 +2,11 @@
 
 - [Installation](#Installation)
 - [API endpoints](#API-endpoints)
+  - [Auth](#auth)
+  - [Profile](#profile)
+  - [Message](#message)
 - [Websocket](#Websocket)
+  - [Events](#events)
 
 
 # Installation
