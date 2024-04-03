@@ -30,6 +30,8 @@ cp .\apps\websocket\.env.example .\apps\websocket\.env
 docker-compose up
 ```
 
+5. Try with open browser and navigate to [http://localhost:3000](http://localhost:3000)
+
 # API endpoints
 
 default port for api is `3000`
