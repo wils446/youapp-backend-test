@@ -72,11 +72,11 @@ export class UserService {
 
   async getUserRoom(userCredential: ICredential) {
     const rooms = await this.roomRepository.find({
-      users: { $in: [userCredential.user] },
+      users: { $in: [userCredential.user._id] },
     });
 
     return {
-      userId: userCredential.user,
+      userId: userCredential.user._id,
       rooms,
     };
   }
