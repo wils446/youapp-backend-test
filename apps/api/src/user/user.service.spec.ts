@@ -168,7 +168,7 @@ describe('UserService', () => {
 
     const rooms = await service.getUserRoom({
       ...userCredential,
-      user: user,
+      user: user._id,
     } as ICredential);
 
     expect(mockRoomRepository.find).toBeCalled();
