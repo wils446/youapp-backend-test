@@ -1,7 +1,7 @@
 import { GetUserCredential } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './dtos';
+import { CreateUserDto, GetUserDto, UpdateUserDto } from './dtos';
 import { ICredential } from './interfaces';
 import { UserService } from './user.service';
 
@@ -27,8 +27,11 @@ export class UserController {
   }
 
   @Get('/getProfile')
-  async getProfile(@GetUserCredential() userCredential: ICredential) {
-    return await this.userService.getUser(userCredential);
+  async getProfile(
+    @GetUserCredential() userCredential: ICredential,
+    @Body() bodyPayload: GetUserDto,
+  ) {
+    return await this.userService.getUser(userCredential, bodyPayload);
   }
 
   @Get('/user/rooms')

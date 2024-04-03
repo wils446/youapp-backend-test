@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './dtos';
+import { CreateUserDto, GetUserDto, UpdateUserDto } from './dtos';
 import { ICredential, IUser } from './interfaces';
 import { CredentialRepository, UserRepository } from './repositories';
 import { ClientSession } from 'mongoose';
@@ -63,8 +63,11 @@ export class UserService {
     }
   }
 
-  async getUser(userCredential: ICredential) {
-    return await this.userRepository.findOne({ _id: userCredential.user._id });
+  async getUser(userCredential: ICredential, getUserDto: GetUserDto) {
+    let targetId = userCredential.user._id;
+    if (getUserDto.targetUser) targetId = getUserDto.targetUser;
+
+    return await this.userRepository.findOne({ _id: targetId });
   }
 
   async getUserRoom(userCredential: ICredential) {
