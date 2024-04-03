@@ -11,7 +11,7 @@ import { ClientSession } from 'mongoose';
 import { lastValueFrom } from 'rxjs';
 import { ICredential } from '../user/interfaces';
 import { UserRepository } from '../user/repositories';
-import { SendMessageDto } from './dtos';
+import { SendMessageDto, ViewMessageDto } from './dtos';
 import { MessageRepository, RoomRepository } from './repositories';
 
 @Injectable()
@@ -62,6 +62,22 @@ export class MessageService {
     } catch (err) {
       console.log(err);
       // await session.abortTransaction();
+      throw new InternalServerErrorException((err as Error).message);
+    }
+  }
+
+  async getMessage(
+    userCredential: ICredential,
+    viewMessageDto: ViewMessageDto,
+  ) {
+    const room = await this.getMessageRoom([
+      userCredential.user._id.toString(),
+      viewMessageDto.targetUser,
+    ]);
+    try {
+      const messages = await this.messageRepository.find({ room: room });
+      return { messages };
+    } catch (err) {
       throw new InternalServerErrorException((err as Error).message);
     }
   }

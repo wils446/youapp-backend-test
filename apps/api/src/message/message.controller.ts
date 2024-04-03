@@ -1,8 +1,8 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { GetUserCredential } from '@app/common/decorators';
 import { ICredential } from '../user/interfaces';
-import { SendMessageDto } from './dtos';
+import { SendMessageDto, ViewMessageDto } from './dtos';
 import { JwtAuthGuard } from '@app/common/guards';
 
 @Controller()
@@ -16,5 +16,13 @@ export class MessageController {
     @Body() bodyPayload: SendMessageDto,
   ) {
     return await this.messageService.sendMessage(userCredential, bodyPayload);
+  }
+
+  @Get('/viewMessage')
+  async viewMessage(
+    @GetUserCredential() userCredential: ICredential,
+    @Body() bodyPayload: ViewMessageDto,
+  ) {
+    return await this.messageService.getMessage(userCredential, bodyPayload);
   }
 }
