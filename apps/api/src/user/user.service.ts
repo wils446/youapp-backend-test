@@ -76,7 +76,7 @@ export class UserService {
     });
 
     return {
-      userId: userCredential.user,
+      userId: userCredential.user._id,
       rooms,
     };
   }
