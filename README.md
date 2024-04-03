@@ -1,3 +1,10 @@
+# Table of Content
+
+- [Installation](#Installation)
+- [API endpoints](#API-endpoints)
+- [Websocket](#Websocket)
+
+
 # Installation
 
 1. Clone this repository (or [Download](https://github.com/wils446/youapp-backend-test/archive/refs/heads/main.zip))
@@ -171,6 +178,7 @@ default port for api is `3000`
 
 # WebSocket
 
+**Note:** every credential need to create profile/user to access the websocket
 for the websocket the default is listening to port `8123`, and its require the auth token at header, for example :
 
 ```js
