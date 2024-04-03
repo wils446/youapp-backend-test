@@ -1,73 +1,199 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Installation
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+1. Clone this repository (or [Download](https://github.com/wils446/youapp-backend-test/archive/refs/heads/main.zip))
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ pnpm install
+```
+git clone https://github.com/wils446/youapp-backend-test
 ```
 
-## Running the app
+2. Copy `.env.example` to `.env`, there are 2 `.env.example` one is located in the `/apps/api` and the other is in `/app/websocket`
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```
+cp .\apps\api\.env.example .\apps\api\.env
+cp .\apps\websocket\.env.example .\apps\websocket\.env
 ```
 
-## Test
+3. Modify `.env` value as needed, here are some descriptions about the environment variables
 
-```bash
-# unit tests
-$ pnpm run test
+| Key                         | Description                                                                                                            | Example                                                     |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `JWT_SECRET`                | [Very long randomly generated string](<(https://www.lastpass.com/features/password-generator)>) for API authentication | `L0Ng-RaNDom-StrING`                                        |
+| `JWT_EXPIRES`               | Time for the token expires, expressed in seconds or a string ([vercel/ms](https://github.com/vercel/ms))               | `14d`(default)                                              |
+| `MONGODB_URI`               | MongoDB URI, **leave this value to default**                                                                           | `mongodb://root:password123@mongodb-primary:27017`(default) |
+| `RABBIT_MQ_URI`             | RabbitMQ URI, **leave this value to default**                                                                          | `amqp://user:password@rabbitmq:5672`(default)               |
+| `RABBIT_MQ_WEBSOCKET_QUEUE` | used for naming a queue, **leave this value to default**                                                               | `websocket`(default)                                        |
+| `API_URI`                   | URI to fetch data from api app, **leave this value to default**                                                        | `http://api:3000`(default)                                  |
 
-# e2e tests
-$ pnpm run test:e2e
+4. Run the containers
 
-# test coverage
-$ pnpm run test:cov
+```
+docker-compose up
 ```
 
-## Support
+# API endpoints
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+default port for api is `3000`
 
-## Stay in touch
+## Auth
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- `POST` `http://localhost:3000/register`
+  - body :
+    - username `string`
+    - email `string`
+    - password `string`
+  - response example :
+  ```json
+  {
+    "token": "jwt-auth-token"
+  }
+  ```
+- `POST` `http://localhost:3000/login`
+  - body:
+    - usernameOrEmail `string`
+    - password `string`
+  - response example :
+  ```json
+  {
+    "token": "jwt-auth-token"
+  }
+  ```
 
-## License
+## Profile
 
-Nest is [MIT licensed](LICENSE).
+- `POST` `http://localhost:3000/createProfile`
+  - auth token required
+  - body :
+    - name `string`
+    - birthday `string`
+    - height `number`
+    - weight `number`
+    - interests `string[]`
+  - response example :
+  ```json
+  {
+    "name": "Andi",
+    "birthday": "29 Sept",
+    "height": 200,
+    "weight": 90,
+    "interests": ["ate", "sleep", "playing game", "reading"],
+    "credential": "660d2e857a23064e4ab7707d",
+    "_id": "660d2f827a23064e4ab77082",
+    "createdAt": "2024-04-03T10:29:22.063Z",
+    "updatedAt": "2024-04-03T10:29:22.063Z"
+  }
+  ```
+- `GET` `http://localhost:3000/getProfile`
+  - auth token required
+  - by default it will target auth user profile
+  - body :
+    - targetUser `string` `optional`
+  - response example :
+  ```json
+  {
+    "_id": "660d2f827a23064e4ab77082",
+    "name": "Andi",
+    "birthday": "29 Sept",
+    "height": 200,
+    "weight": 90,
+    "interests": ["ate", "sleep", "playing game", "reading"],
+    "credential": "660d2e857a23064e4ab7707d",
+    "createdAt": "2024-04-03T10:29:22.063Z",
+    "updatedAt": "2024-04-03T10:29:22.063Z"
+  }
+  ```
+- `PATCH` `http://localhost:3000/updateProfile`
+  - auth token required
+  - body :
+    - name `string` `optional`
+    - birthday `string` `optional`
+    - weight `number` `optional`
+    - height `number` `optional`
+    - interests `string[]` `optional`
+  - response example :
+  ```json
+  {
+    "_id": "660d2f827a23064e4ab77082",
+    "name": "Andi",
+    "birthday": "29 Sept",
+    "height": 200,
+    "weight": 90,
+    "interests": ["ate", "sleep", "playing game"],
+    "credential": "660d2e857a23064e4ab7707d",
+    "createdAt": "2024-04-03T10:29:22.063Z",
+    "updatedAt": "2024-04-03T10:32:40.018Z"
+  }
+  ```
+
+## Message
+
+- `POST` `http://localhost:3000/sendMessage`
+
+  - auth token required
+  - body :
+    - message `string`
+    - targetUser `string`
+  - response example :
+
+  ```json
+  {
+    "message": "woi nes",
+    "room": "660d31607a23064e4ab77096",
+    "user": "660d2f827a23064e4ab77082",
+    "_id": "660d31617a23064e4ab77098",
+    "createdAt": "2024-04-03T10:37:21.065Z",
+    "updatedAt": "2024-04-03T10:37:21.065Z"
+  }
+  ```
+
+- `POST` `http://localhost:3000/viewMessage`
+
+  - auth token required
+  - body :
+    - targetUser `string`
+  - response example :
+
+    ```json
+    {
+      "messages": [
+        {
+          "_id": "660d35295a80073009a80cf3",
+          "message": "woi son",
+          "room": "660d35295a80073009a80cf1",
+          "user": "660d346a5a80073009a80cd5",
+          "createdAt": "2024-04-03T10:53:29.346Z",
+          "updatedAt": "2024-04-03T10:53:29.346Z"
+        }
+      ]
+    }
+    ```
+
+# WebSocket
+
+for the websocket the default is listening to port `8123`, and its require the auth token at header, for example :
+
+```js
+const socket = io('ws://localhost:8123', {
+  extraHeaders: {
+    authorization: 'Bearer AUTH-TOKEN-HERE',
+  },
+});
+```
+
+## events
+
+- `receive-message`
+  - the data you received when its trigger :
+    ```json
+    {
+      "newMessage": {
+        "message": "woi son",
+        "room": "660d35a85a80073009a80cfd",
+        "user": "660d347a5a80073009a80cdd",
+        "_id": "660d35a85a80073009a80cff",
+        "createdAt": "2024-04-03T10:55:36.271Z",
+        "updatedAt": "2024-04-03T10:55:36.271Z"
+      }
+    }
+    ```
+- `unauthorized-error`
+  - it will trigger if you auth token is not valid
